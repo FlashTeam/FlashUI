@@ -1,21 +1,32 @@
-gulp-starter
+FlashUI
 ============
 
-Starter Gulp + Browserify project with examples of how to accomplish some common tasks and workflows. Read the [blog post](http://viget.com/extend/gulp-browserify-starter-faq) for more context, and check out the [Wiki](https://github.com/greypants/gulp-starter/wiki) for some good background knowledge.
 
-Includes the following tools, tasks, and workflows:
 
-- [Browserify](http://browserify.org/) (with [browserify-shim](https://github.com/thlorenz/browserify-shim))
-- [Watchify](https://github.com/substack/watchify) (caching version of browserify for super fast rebuilds)
-- [SASS](http://sass-lang.com/) (with [compass](http://compass-style.org/) and [source maps](https://github.com/sindresorhus/gulp-ruby-sass#sourcemap)!)
-- [CoffeeScript](http://coffeescript.org/) (with source maps!)
-- [jQuery](http://jquery.com/) (from npm)
-- [Backbone](http://backbonejs.org/) (from npm)
-- [Handlebars](http://handlebarsjs.com/) (as a backbone dependency)
-- [BrowserSync](http://browsersync.io) for live reloading and a static server
-- Image optimization
-- Error Notifications in Notification Center
-- Non common-js vendor code (like a jQuery plugin)
+### Testing
+```
+cd build
+```
+
+Python v2.7
+```
+python -m SimpleHTTPServer
+```
+
+Python v3.2
+```
+python -m http.server
+```
+
+Then head to
+```
+http://localhost:8000
+```
+
+
+
+
+### Setting Up Dev
 
 If you've never used Node or npm before, you'll need to install Node.
 If you use homebrew, do:

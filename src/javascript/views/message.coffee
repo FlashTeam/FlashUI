@@ -1,7 +1,6 @@
 _          = require 'underscore'
 Backbone   = require 'backbone'
 Backbone.$ = require 'jquery'
-Photo      = require '../models/photo'
 
 module.exports = Backbone.View.extend
 

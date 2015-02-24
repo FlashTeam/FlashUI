@@ -12615,7 +12615,7 @@ Backbone.history.start({
 router;
 
 
-},{"./router":10,"backbone":1,"underscore":2}],7:[function(require,module,exports){
+},{"./router":9,"backbone":1,"underscore":2}],7:[function(require,module,exports){
 var Backbone, Message, Results, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -12657,7 +12657,7 @@ module.exports = Results;
 
 
 },{"../models/message":8,"backbone":1,"jquery":4,"underscore":2}],8:[function(require,module,exports){
-var Backbone, Message, Photo, _,
+var Backbone, Message, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -12666,8 +12666,6 @@ _ = require('underscore');
 Backbone = require('backbone');
 
 Backbone.$ = require('jquery');
-
-Photo = require('./photo');
 
 Message = (function(_super) {
   __extends(Message, _super);
@@ -12693,44 +12691,7 @@ Message = (function(_super) {
 module.exports = Message;
 
 
-},{"./photo":9,"backbone":1,"jquery":4,"underscore":2}],9:[function(require,module,exports){
-var Backbone, Photo, _,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-_ = require('underscore');
-
-Backbone = require('backbone');
-
-Backbone.$ = require('jquery');
-
-Photo = (function(_super) {
-  __extends(Photo, _super);
-
-  function Photo() {
-    return Photo.__super__.constructor.apply(this, arguments);
-  }
-
-  Photo.prototype.urlRoot = function() {
-    return "http://friss.me/dev/chat/getAttachments.php?id=";
-  };
-
-  Photo.prototype.url = function() {
-    return this.urlRoot() + this.get('fid');
-  };
-
-  Photo.prototype.parse = function(json) {
-    return json[0];
-  };
-
-  return Photo;
-
-})(Backbone.Model);
-
-module.exports = Photo;
-
-
-},{"backbone":1,"jquery":4,"underscore":2}],10:[function(require,module,exports){
+},{"backbone":1,"jquery":4,"underscore":2}],9:[function(require,module,exports){
 var Backbone, ONE_MINUTE, Results, ResultsView, _;
 
 _ = require('underscore');
@@ -12766,7 +12727,7 @@ module.exports = Backbone.Router.extend({
 });
 
 
-},{"./collections/results":7,"./views/results":14,"backbone":1,"jquery":4,"underscore":2}],11:[function(require,module,exports){
+},{"./collections/results":7,"./views/results":13,"backbone":1,"jquery":4,"underscore":2}],10:[function(require,module,exports){
 var jade = require("jade/runtime");
 
 module.exports = function template(locals) {
@@ -12776,7 +12737,7 @@ var jade_interp;
 ;var locals_for_with = (locals || {});(function (message) {
 buf.push("<li" + (jade.attr("data-id", message.id, true, false)) + " class=\"left clearfix message\"><span class=\"chat-img pull-left\"><img src=\"images/test.jpg\" class=\"img-circle\"/></span><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">" + (jade.escape(null == (jade_interp = message.username) ? "" : jade_interp)) + "</strong><small class=\"pull-right text-muted\"><span class=\"glyphicon glyphicon-time\"></span>" + (jade.escape((jade_interp = message.time) == null ? '' : jade_interp)) + "</small></div><p>" + (jade.escape(null == (jade_interp = message.comment) ? "" : jade_interp)) + "</p><p>" + (jade.escape(null == (jade_interp = message.file) ? "" : jade_interp)) + "</p><p>" + (jade.escape(null == (jade_interp = message.votes) ? "" : jade_interp)) + "</p></div></li>");}.call(this,"message" in locals_for_with?locals_for_with.message:typeof message!=="undefined"?message:undefined));;return buf.join("");
 };
-},{"jade/runtime":3}],12:[function(require,module,exports){
+},{"jade/runtime":3}],11:[function(require,module,exports){
 var jade = require("jade/runtime");
 
 module.exports = function template(locals) {
@@ -12796,16 +12757,14 @@ buf.push("<a class=\"show-older\">Show older messages</a>");
 }
 buf.push("<ul class=\"chat\"></ul></div></div></div></div></div></div>");}.call(this,"backButton" in locals_for_with?locals_for_with.backButton:typeof backButton!=="undefined"?backButton:undefined,"query" in locals_for_with?locals_for_with.query:typeof query!=="undefined"?query:undefined,"title" in locals_for_with?locals_for_with.title:typeof title!=="undefined"?title:undefined));;return buf.join("");
 };
-},{"jade/runtime":3}],13:[function(require,module,exports){
-var Backbone, Photo, _;
+},{"jade/runtime":3}],12:[function(require,module,exports){
+var Backbone, _;
 
 _ = require('underscore');
 
 Backbone = require('backbone');
 
 Backbone.$ = require('jquery');
-
-Photo = require('../models/photo');
 
 module.exports = Backbone.View.extend({
   template: require('../templates/message.jade'),
@@ -12825,7 +12784,7 @@ module.exports = Backbone.View.extend({
 });
 
 
-},{"../models/photo":9,"../templates/message.jade":11,"backbone":1,"jquery":4,"underscore":2}],14:[function(require,module,exports){
+},{"../templates/message.jade":10,"backbone":1,"jquery":4,"underscore":2}],13:[function(require,module,exports){
 var Backbone, MessageView, _;
 
 _ = require('underscore');
@@ -12873,4 +12832,4 @@ module.exports = Backbone.View.extend({
 });
 
 
-},{"../templates/results.jade":12,"./message":13,"backbone":1,"jquery":4,"underscore":2}]},{},[6])
+},{"../templates/results.jade":11,"./message":12,"backbone":1,"jquery":4,"underscore":2}]},{},[6])

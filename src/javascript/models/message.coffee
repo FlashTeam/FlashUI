@@ -1,7 +1,6 @@
 _          = require 'underscore'
 Backbone   = require 'backbone'
 Backbone.$ = require 'jquery'
-Photo      = require './photo'
 
 class Message extends Backbone.Model
 
