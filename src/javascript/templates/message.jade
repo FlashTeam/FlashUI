@@ -1,0 +1,13 @@
+li.left.clearfix.message(data-id= message.id)
+  span.chat-img.pull-left
+    img.img-circle(src="images/test.jpg")
+  .chat-body.clearfix
+    .header
+      strong.primary-font= message.username
+      small.pull-right.text-muted
+        span.glyphicon.glyphicon-time
+        | #{message.time}
+
+    p= message.comment
+    p= message.file
+    p= message.votes

@@ -1,0 +1,25 @@
+.results-page
+  .container
+    .row
+      .col-md-12
+          h1= title
+          if backButton
+            a.back
+              span.glyphicon.glyphicon-chevron-left
+              | Back
+          form
+            .input-group.custom-search-form.search
+              input(type="text", name="q", class="form-control", value= query)
+              span.input-group-btn
+                button.btn.btn-default(type="button")
+                  span.glyphicon.glyphicon-search
+    .row
+      .col-md-12
+        .panel.panel-primary
+          .panel-body
+            if backButton
+              a.show-older
+                | Show older messages
+            ul.chat
+
+
