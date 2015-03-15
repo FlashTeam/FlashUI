@@ -1,6 +1,7 @@
 _          = require 'underscore'
 Backbone   = require 'backbone'
 Backbone.$ = require 'jquery'
+moment     = require 'moment'
 
 module.exports = Backbone.View.extend
 
@@ -18,6 +19,8 @@ module.exports = Backbone.View.extend
 
   getCtx: ->
     message: @model.toJSON()
+    postDate: moment(@model.get('time')).calendar()
+    expires: moment(@model.get('timeout')).from(moment())
 
   render: ->
     @$el.html(@template(@getCtx()))

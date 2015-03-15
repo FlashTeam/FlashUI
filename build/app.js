@@ -15704,7 +15704,7 @@ module.exports = Results;
 
 
 },{"../models/message":9,"backbone":1,"jquery":4,"underscore":2}],9:[function(require,module,exports){
-var Backbone, Message, moment, _,
+var Backbone, Message, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -15713,8 +15713,6 @@ _ = require('underscore');
 Backbone = require('backbone');
 
 Backbone.$ = require('jquery');
-
-moment = require('moment');
 
 Message = (function(_super) {
   __extends(Message, _super);
@@ -15727,11 +15725,6 @@ Message = (function(_super) {
     return "http://localhost:8080/posts/" + this.id;
   };
 
-  Message.prototype.parse = function(json) {
-    json.formatedTime = moment(json.time).calendar();
-    return json;
-  };
-
   return Message;
 
 })(Backbone.Model);
@@ -15739,7 +15732,7 @@ Message = (function(_super) {
 module.exports = Message;
 
 
-},{"backbone":1,"jquery":4,"moment":5,"underscore":2}],10:[function(require,module,exports){
+},{"backbone":1,"jquery":4,"underscore":2}],10:[function(require,module,exports){
 var Backbone, ONE_MINUTE, Results, ResultsView, _;
 
 _ = require('underscore');
@@ -15782,8 +15775,8 @@ module.exports = function template(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
-;var locals_for_with = (locals || {});(function (message) {
-buf.push("<div" + (jade.attr("data-id", message.id, true, false)) + " class=\"row post\"><div class=\"col-md-8 col-md-offset-2\"><div class=\"post-img\"><img" + (jade.attr("src", "http://localhost:8000/"+message.image, true, false)) + " class=\"img-responsive\"/></div><div class=\"post-body\"><div class=\"header\"><strong class=\"username\">" + (jade.escape(null == (jade_interp = message.username) ? "" : jade_interp)) + "</strong><div class=\"btn-group vote-group\"><button class=\"btn btn-danger down\"><i class=\"vote fa fa-thumbs-o-down\"></i></button><button class=\"btn btn-primary\">" + (jade.escape((jade_interp = message.vote) == null ? '' : jade_interp)) + "</button><button class=\"btn btn-success up\"><i class=\"vote fa fa-thumbs-o-up\"></i></button></div><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> " + (jade.escape((jade_interp = message.formatedTime) == null ? '' : jade_interp)) + "</small></div><p>" + (jade.escape(null == (jade_interp = message.comment) ? "" : jade_interp)) + "</p></div></div></div>");}.call(this,"message" in locals_for_with?locals_for_with.message:typeof message!=="undefined"?message:undefined));;return buf.join("");
+;var locals_for_with = (locals || {});(function (expires, message, postDate) {
+buf.push("<div" + (jade.attr("data-id", message.id, true, false)) + " class=\"row post\"><div class=\"col-md-8 col-md-offset-2\"><div class=\"post-img\"><img" + (jade.attr("src", "http://localhost:8000/"+message.image, true, false)) + " class=\"img-responsive\"/></div><div class=\"post-body\"><div class=\"header\"><strong class=\"username\">" + (jade.escape(null == (jade_interp = message.username) ? "" : jade_interp)) + "</strong><div class=\"btn-group vote-group\"><button class=\"btn btn-danger down\"><i class=\"vote fa fa-thumbs-o-down\"></i></button><button class=\"btn btn-primary\">" + (jade.escape((jade_interp = message.vote) == null ? '' : jade_interp)) + "</button><button class=\"btn btn-success up\"><i class=\"vote fa fa-thumbs-o-up\"></i></button></div><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> " + (jade.escape((jade_interp = postDate) == null ? '' : jade_interp)) + "</small></div><p>" + (jade.escape(null == (jade_interp = message.comment) ? "" : jade_interp)) + "</p><p>Expires " + (jade.escape((jade_interp = expires) == null ? '' : jade_interp)) + "</p></div></div></div>");}.call(this,"expires" in locals_for_with?locals_for_with.expires:typeof expires!=="undefined"?expires:undefined,"message" in locals_for_with?locals_for_with.message:typeof message!=="undefined"?message:undefined,"postDate" in locals_for_with?locals_for_with.postDate:typeof postDate!=="undefined"?postDate:undefined));;return buf.join("");
 };
 },{"jade/runtime":3}],12:[function(require,module,exports){
 var jade = require("jade/runtime");
@@ -15796,13 +15789,15 @@ var jade_interp;
 buf.push("<div class=\"results-page\"><div class=\"container\"><div class=\"row\"><div class=\"col-md-12 text-center\"><h1><i class=\"fa fa-bolt\"></i> " + (jade.escape((jade_interp = title) == null ? '' : jade_interp)) + "</h1></div></div><div class=\"posts\"></div></div></div>");}.call(this,"title" in locals_for_with?locals_for_with.title:typeof title!=="undefined"?title:undefined));;return buf.join("");
 };
 },{"jade/runtime":3}],13:[function(require,module,exports){
-var Backbone, _;
+var Backbone, moment, _;
 
 _ = require('underscore');
 
 Backbone = require('backbone');
 
 Backbone.$ = require('jquery');
+
+moment = require('moment');
 
 module.exports = Backbone.View.extend({
   template: require('../templates/message.jade'),
@@ -15819,7 +15814,9 @@ module.exports = Backbone.View.extend({
   },
   getCtx: function() {
     return {
-      message: this.model.toJSON()
+      message: this.model.toJSON(),
+      postDate: moment(this.model.get('time')).calendar(),
+      expires: moment(this.model.get('timeout')).from(moment())
     };
   },
   render: function() {
@@ -15845,7 +15842,7 @@ module.exports = Backbone.View.extend({
 });
 
 
-},{"../templates/message.jade":11,"backbone":1,"jquery":4,"underscore":2}],14:[function(require,module,exports){
+},{"../templates/message.jade":11,"backbone":1,"jquery":4,"moment":5,"underscore":2}],14:[function(require,module,exports){
 var Backbone, MessageView, _;
 
 _ = require('underscore');
