@@ -1,6 +1,7 @@
 _          = require 'underscore'
 Backbone   = require 'backbone'
 Backbone.$ = require 'jquery'
+moment = require 'moment'
 
 class Message extends Backbone.Model
 
@@ -8,8 +9,7 @@ class Message extends Backbone.Model
     "http://localhost:8080/posts/"+@id
 
   parse: (json) ->
-    json.time = parseInt(json.time, 10)
-    json.id = parseInt(json.id, 10)
+    json.formatedTime = moment(json.time).calendar()
     json
 
 module.exports = Message

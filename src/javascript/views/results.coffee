@@ -21,10 +21,9 @@ module.exports = Backbone.View.extend
 
   postRender: ->
     for message in @posts.models
-      if message.get('message') isnt "" or message.get('attachment') is "1"
-        Message = new MessageView
-          model: message
+      Message = new MessageView
+        model: message
 
-        $('.chat').append(Message.render())
-        Message.postRender()
+      $('.posts').append(Message.render())
+      Message.postRender()
 

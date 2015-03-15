@@ -1,13 +1,20 @@
-li.left.clearfix.message(data-id= message.id)
-  span.chat-img.pull-left
-    img.img-circle(src="images/test.jpg")
-  .chat-body.clearfix
-    .header
-      strong.primary-font= message.username
-      small.pull-right.text-muted
-        span.glyphicon.glyphicon-time
-        | #{message.time}
+.row.post(data-id= message.id)
+  .col-md-8.col-md-offset-2
+    .post-img
+      img.img-responsive(src="http://localhost:8000/"+message.image)
+    .post-body
+      .header
+        strong.username= message.username
+        .btn-group.vote-group
+          button.btn.btn-danger.down
+            i.vote.fa.fa-thumbs-o-down
+          button.btn.btn-primary
+            | #{message.vote}
+          button.btn.btn-success.up
+            i.vote.fa.fa-thumbs-o-up
 
-    p= message.comment
-    p= message.file
-    p= message.votes
+        small.pull-right.text-muted
+          i.fa.fa-clock-o
+          |  #{message.formatedTime}
+
+      p= message.comment
