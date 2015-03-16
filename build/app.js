@@ -15898,7 +15898,23 @@ ResultsView = (function(_super) {
   ResultsView.prototype.initialize = function(options) {
     this.options = options;
     this.posts = this.options.posts;
-    return this.render();
+    this.children = [];
+    this.render();
+    this.listenTo(this.posts, 'add', function(post) {
+      var Post;
+      Post = new PostView({
+        model: post
+      });
+      $('.posts').prepend(Post.render());
+      return Post.postRender();
+    });
+    return this.interval = setInterval((function(_this) {
+      return function() {
+        return _this.posts.fetch({
+          remove: false
+        });
+      };
+    })(this), 60000);
   };
 
   ResultsView.prototype.getCtx = function() {
@@ -15913,18 +15929,30 @@ ResultsView = (function(_super) {
   };
 
   ResultsView.prototype.postRender = function() {
-    var Message, post, _i, _len, _ref, _results;
+    var Post, post, _i, _len, _ref, _results;
     _ref = this.posts.models;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       post = _ref[_i];
-      Message = new PostView({
+      Post = new PostView({
         model: post
       });
-      $('.posts').append(Message.render());
-      _results.push(Message.postRender());
+      $('.posts').append(Post.render());
+      Post.postRender();
+      _results.push(this.children.push(Post));
     }
     return _results;
+  };
+
+  ResultsView.prototype.remove = function() {
+    var child, _i, _len, _ref;
+    ResultsView.__super__.remove.apply(this, arguments);
+    _ref = this.children;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      child = _ref[_i];
+      child.remove();
+    }
+    return clearInterval(this.interval);
   };
 
   return ResultsView;
