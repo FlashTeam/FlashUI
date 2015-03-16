@@ -1,20 +1,19 @@
 _          = require 'underscore'
 Backbone   = require 'backbone'
 Backbone.$ = require 'jquery'
-Results =  require './collections/results'
-ResultsView =  require './views/results'
+Posts =  require './collections/posts'
+ResultsView =  require './views/resultsView'
 
-ONE_MINUTE = 6000
-
-module.exports = Backbone.Router.extend
+class Router extends Backbone.Router
 
   routes:
     '(/)':                    'index'
-    'results(/):query(/)':    'results'
 
   index: ->
-    results = new Results([], {})
-    results.fetch().done =>
+    posts = new Posts([], {})
+    posts.fetch().done =>
       view = new ResultsView
         el: 'body'
-        posts: results
+        posts: posts
+
+module.exports = Router

@@ -15663,7 +15663,7 @@ router;
 
 
 },{"./router":10,"backbone":1,"underscore":2}],8:[function(require,module,exports){
-var Backbone, Message, Results, _,
+var Backbone, Post, Posts, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -15673,38 +15673,38 @@ Backbone = require('backbone');
 
 Backbone.$ = require('jquery');
 
-Message = require('../models/message');
+Post = require('../models/post');
 
-Results = (function(_super) {
-  __extends(Results, _super);
+Posts = (function(_super) {
+  __extends(Posts, _super);
 
-  function Results() {
-    return Results.__super__.constructor.apply(this, arguments);
+  function Posts() {
+    return Posts.__super__.constructor.apply(this, arguments);
   }
 
-  Results.prototype.model = Message;
+  Posts.prototype.model = Post;
 
-  Results.prototype.url = function() {
+  Posts.prototype.url = function() {
     return "http://localhost:8080/posts";
   };
 
-  Results.prototype.initialize = function(models, options) {
+  Posts.prototype.initialize = function(models, options) {
     return this.options = options;
   };
 
-  Results.prototype.comparator = function(message) {
-    return -message.get('time');
+  Posts.prototype.comparator = function(post) {
+    return -post.get('time');
   };
 
-  return Results;
+  return Posts;
 
 })(Backbone.Collection);
 
-module.exports = Results;
+module.exports = Posts;
 
 
-},{"../models/message":9,"backbone":1,"jquery":4,"underscore":2}],9:[function(require,module,exports){
-var Backbone, Message, _,
+},{"../models/post":9,"backbone":1,"jquery":4,"underscore":2}],9:[function(require,module,exports){
+var Backbone, Post, _,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -15714,26 +15714,28 @@ Backbone = require('backbone');
 
 Backbone.$ = require('jquery');
 
-Message = (function(_super) {
-  __extends(Message, _super);
+Post = (function(_super) {
+  __extends(Post, _super);
 
-  function Message() {
-    return Message.__super__.constructor.apply(this, arguments);
+  function Post() {
+    return Post.__super__.constructor.apply(this, arguments);
   }
 
-  Message.prototype.urlRoot = function() {
+  Post.prototype.urlRoot = function() {
     return "http://localhost:8080/posts/" + this.id;
   };
 
-  return Message;
+  return Post;
 
 })(Backbone.Model);
 
-module.exports = Message;
+module.exports = Post;
 
 
 },{"backbone":1,"jquery":4,"underscore":2}],10:[function(require,module,exports){
-var Backbone, ONE_MINUTE, Results, ResultsView, _;
+var Backbone, Posts, ResultsView, Router, _,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 _ = require('underscore');
 
@@ -15741,42 +15743,51 @@ Backbone = require('backbone');
 
 Backbone.$ = require('jquery');
 
-Results = require('./collections/results');
+Posts = require('./collections/posts');
 
-ResultsView = require('./views/results');
+ResultsView = require('./views/resultsView');
 
-ONE_MINUTE = 6000;
+Router = (function(_super) {
+  __extends(Router, _super);
 
-module.exports = Backbone.Router.extend({
-  routes: {
-    '(/)': 'index',
-    'results(/):query(/)': 'results'
-  },
-  index: function() {
-    var results;
-    results = new Results([], {});
-    return results.fetch().done((function(_this) {
+  function Router() {
+    return Router.__super__.constructor.apply(this, arguments);
+  }
+
+  Router.prototype.routes = {
+    '(/)': 'index'
+  };
+
+  Router.prototype.index = function() {
+    var posts;
+    posts = new Posts([], {});
+    return posts.fetch().done((function(_this) {
       return function() {
         var view;
         return view = new ResultsView({
           el: 'body',
-          posts: results
+          posts: posts
         });
       };
     })(this));
-  }
-});
+  };
+
+  return Router;
+
+})(Backbone.Router);
+
+module.exports = Router;
 
 
-},{"./collections/results":8,"./views/results":14,"backbone":1,"jquery":4,"underscore":2}],11:[function(require,module,exports){
+},{"./collections/posts":8,"./views/resultsView":14,"backbone":1,"jquery":4,"underscore":2}],11:[function(require,module,exports){
 var jade = require("jade/runtime");
 
 module.exports = function template(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
-;var locals_for_with = (locals || {});(function (expires, message, postDate) {
-buf.push("<div" + (jade.attr("data-id", message.id, true, false)) + " class=\"row post\"><div class=\"col-md-8 col-md-offset-2\"><div class=\"post-img\"><img" + (jade.attr("src", "http://localhost:8000/"+message.image, true, false)) + " class=\"img-responsive\"/></div><div class=\"post-body\"><div class=\"header\"><strong class=\"username\">" + (jade.escape(null == (jade_interp = message.username) ? "" : jade_interp)) + "</strong><div class=\"btn-group vote-group\"><button class=\"btn btn-danger down\"><i class=\"vote fa fa-thumbs-o-down\"></i></button><button class=\"btn btn-primary\">" + (jade.escape((jade_interp = message.vote) == null ? '' : jade_interp)) + "</button><button class=\"btn btn-success up\"><i class=\"vote fa fa-thumbs-o-up\"></i></button></div><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> " + (jade.escape((jade_interp = postDate) == null ? '' : jade_interp)) + "</small></div><p>" + (jade.escape(null == (jade_interp = message.comment) ? "" : jade_interp)) + "</p><p>Expires " + (jade.escape((jade_interp = expires) == null ? '' : jade_interp)) + "</p></div></div></div>");}.call(this,"expires" in locals_for_with?locals_for_with.expires:typeof expires!=="undefined"?expires:undefined,"message" in locals_for_with?locals_for_with.message:typeof message!=="undefined"?message:undefined,"postDate" in locals_for_with?locals_for_with.postDate:typeof postDate!=="undefined"?postDate:undefined));;return buf.join("");
+;var locals_for_with = (locals || {});(function (expires, post, postDate) {
+buf.push("<div" + (jade.attr("data-id", post.id, true, false)) + " class=\"row post\"><div class=\"col-md-8 col-md-offset-2\"><div class=\"post-img\"><img" + (jade.attr("src", "http://localhost:8000/"+post.image, true, false)) + " class=\"img-responsive\"/></div><div class=\"post-body\"><div class=\"header\"><strong class=\"username\">" + (jade.escape(null == (jade_interp = post.username) ? "" : jade_interp)) + "</strong><div class=\"btn-group vote-group\"><button class=\"btn btn-danger down\"><i class=\"vote fa fa-thumbs-o-down\"></i></button><button class=\"btn btn-primary\">" + (jade.escape((jade_interp = post.vote) == null ? '' : jade_interp)) + "</button><button class=\"btn btn-success up\"><i class=\"vote fa fa-thumbs-o-up\"></i></button></div><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> " + (jade.escape((jade_interp = postDate) == null ? '' : jade_interp)) + "</small></div><p>" + (jade.escape(null == (jade_interp = post.comment) ? "" : jade_interp)) + "</p><p>Expires " + (jade.escape((jade_interp = expires) == null ? '' : jade_interp)) + "</p></div></div></div>");}.call(this,"expires" in locals_for_with?locals_for_with.expires:typeof expires!=="undefined"?expires:undefined,"post" in locals_for_with?locals_for_with.post:typeof post!=="undefined"?post:undefined,"postDate" in locals_for_with?locals_for_with.postDate:typeof postDate!=="undefined"?postDate:undefined));;return buf.join("");
 };
 },{"jade/runtime":3}],12:[function(require,module,exports){
 var jade = require("jade/runtime");
@@ -15789,7 +15800,9 @@ var jade_interp;
 buf.push("<div class=\"results-page\"><div class=\"container\"><div class=\"row\"><div class=\"col-md-12 text-center\"><h1><i class=\"fa fa-bolt\"></i> " + (jade.escape((jade_interp = title) == null ? '' : jade_interp)) + "</h1></div></div><div class=\"posts\"></div></div></div>");}.call(this,"title" in locals_for_with?locals_for_with.title:typeof title!=="undefined"?title:undefined));;return buf.join("");
 };
 },{"jade/runtime":3}],13:[function(require,module,exports){
-var Backbone, moment, _;
+var Backbone, PostView, moment, _,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 _ = require('underscore');
 
@@ -15799,51 +15812,71 @@ Backbone.$ = require('jquery');
 
 moment = require('moment');
 
-module.exports = Backbone.View.extend({
-  template: require('../templates/message.jade'),
-  events: {
+PostView = (function(_super) {
+  __extends(PostView, _super);
+
+  function PostView() {
+    return PostView.__super__.constructor.apply(this, arguments);
+  }
+
+  PostView.prototype.template = require('../templates/post.jade');
+
+  PostView.prototype.events = {
     'click .up': 'upVote',
     'click .down': 'downVote'
-  },
-  initialize: function(options) {
+  };
+
+  PostView.prototype.initialize = function(options) {
     this.model = options.model;
     this.options = options;
     return this.listenTo(this.model, 'change', function() {
       return this.render();
     });
-  },
-  getCtx: function() {
+  };
+
+  PostView.prototype.getCtx = function() {
     return {
-      message: this.model.toJSON(),
+      post: this.model.toJSON(),
       postDate: moment(this.model.get('time')).calendar(),
       expires: moment(this.model.get('timeout')).from(moment())
     };
-  },
-  render: function() {
+  };
+
+  PostView.prototype.render = function() {
     return this.$el.html(this.template(this.getCtx()));
-  },
-  postRender: function() {
+  };
+
+  PostView.prototype.postRender = function() {
     return this;
-  },
-  upVote: function() {
+  };
+
+  PostView.prototype.upVote = function() {
     return $.post("http://localhost:8080/posts/" + this.model.get('id') + "/vote/up", (function(_this) {
       return function(data) {
         return _this.model.set(data);
       };
     })(this));
-  },
-  downVote: function() {
+  };
+
+  PostView.prototype.downVote = function() {
     return $.post("http://localhost:8080/posts/" + this.model.get('id') + "/vote/down", (function(_this) {
       return function(data) {
         return _this.model.set(data);
       };
     })(this));
-  }
-});
+  };
+
+  return PostView;
+
+})(Backbone.View);
+
+module.exports = PostView;
 
 
-},{"../templates/message.jade":11,"backbone":1,"jquery":4,"moment":5,"underscore":2}],14:[function(require,module,exports){
-var Backbone, MessageView, _;
+},{"../templates/post.jade":11,"backbone":1,"jquery":4,"moment":5,"underscore":2}],14:[function(require,module,exports){
+var Backbone, PostView, ResultsView, _,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 _ = require('underscore');
 
@@ -15851,39 +15884,54 @@ Backbone = require('backbone');
 
 Backbone.$ = require('jquery');
 
-MessageView = require('./message');
+PostView = require('./postView');
 
-module.exports = Backbone.View.extend({
-  template: require('../templates/results.jade'),
-  initialize: function(options) {
+ResultsView = (function(_super) {
+  __extends(ResultsView, _super);
+
+  function ResultsView() {
+    return ResultsView.__super__.constructor.apply(this, arguments);
+  }
+
+  ResultsView.prototype.template = require('../templates/results.jade');
+
+  ResultsView.prototype.initialize = function(options) {
     this.options = options;
     this.posts = this.options.posts;
     return this.render();
-  },
-  getCtx: function() {
+  };
+
+  ResultsView.prototype.getCtx = function() {
     return {
       title: "Flash Posts"
     };
-  },
-  render: function() {
+  };
+
+  ResultsView.prototype.render = function() {
     this.$el.html(this.template(this.getCtx()));
     return this.postRender();
-  },
-  postRender: function() {
-    var Message, message, _i, _len, _ref, _results;
+  };
+
+  ResultsView.prototype.postRender = function() {
+    var Message, post, _i, _len, _ref, _results;
     _ref = this.posts.models;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      message = _ref[_i];
-      Message = new MessageView({
-        model: message
+      post = _ref[_i];
+      Message = new PostView({
+        model: post
       });
       $('.posts').append(Message.render());
       _results.push(Message.postRender());
     }
     return _results;
-  }
-});
+  };
+
+  return ResultsView;
+
+})(Backbone.View);
+
+module.exports = ResultsView;
 
 
-},{"../templates/results.jade":12,"./message":13,"backbone":1,"jquery":4,"underscore":2}]},{},[7])
+},{"../templates/results.jade":12,"./postView":13,"backbone":1,"jquery":4,"underscore":2}]},{},[7])
