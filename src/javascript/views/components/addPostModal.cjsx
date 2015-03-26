@@ -22,6 +22,7 @@ AddPostModal = React.createClass
     error: false
 
   addPost: (evt) ->
+    @setState(error: false)
     evt.preventDefault()
     formData = new FormData()
     formData.append("username", @state.username)
