@@ -40965,7 +40965,7 @@ Router = (function(_super) {
 module.exports = Router;
 
 
-},{"./collections/posts":226,"./views/resultsView":235,"backbone":1,"jquery":4,"underscore":2}],229:[function(require,module,exports){
+},{"./collections/posts":226,"./views/resultsView":237,"backbone":1,"jquery":4,"underscore":2}],229:[function(require,module,exports){
 var jade = require("jade/runtime");
 
 module.exports = function template(locals) {
@@ -40973,9 +40973,195 @@ var buf = [];
 var jade_mixins = {};
 var jade_interp;
 ;var locals_for_with = (locals || {});(function (title) {
-buf.push("<div class=\"results-page\"><div class=\"container\"><div class=\"row\"><div class=\"col-md-12 text-center\"><h1><i class=\"fa fa-bolt\"></i> " + (jade.escape((jade_interp = title) == null ? '' : jade_interp)) + "</h1></div></div><div class=\"posts-container\"></div></div></div>");}.call(this,"title" in locals_for_with?locals_for_with.title:typeof title!=="undefined"?title:undefined));;return buf.join("");
+buf.push("<div class=\"results-page\"><div class=\"add-post-btn-container pull-right\"></div><div class=\"container\"><div class=\"row\"><div class=\"col-md-12 text-center\"><h1><i class=\"fa fa-bolt\"></i> " + (jade.escape((jade_interp = title) == null ? '' : jade_interp)) + "</h1></div></div><div class=\"posts-container\"></div></div></div>");}.call(this,"title" in locals_for_with?locals_for_with.title:typeof title!=="undefined"?title:undefined));;return buf.join("");
 };
 },{"jade/runtime":3}],230:[function(require,module,exports){
+var AddPostModal, Button, Col, ErrorAlert, Input, Modal, Post, ProgressBar, React, Row;
+
+React = require('react');
+
+Row = require('react-bootstrap').Row;
+
+Col = require('react-bootstrap').Col;
+
+Modal = require('react-bootstrap').Modal;
+
+Button = require('react-bootstrap').Button;
+
+Input = require('react-bootstrap').Input;
+
+ProgressBar = require('react-bootstrap').ProgressBar;
+
+Post = require('../../models/post');
+
+ErrorAlert = require('./errorAlert.cjsx');
+
+AddPostModal = React.createClass({
+  displayName: 'AddPostModal',
+  getInitialState: function() {
+    return {
+      file: '',
+      comment: '',
+      username: '',
+      timeout: '60000',
+      latitude: '0',
+      longitude: '0',
+      progress: 0,
+      error: false
+    };
+  },
+  addPost: function(evt) {
+    var formData, request;
+    evt.preventDefault();
+    formData = new FormData();
+    formData.append("username", this.state.username);
+    formData.append("file", this.state.file);
+    formData.append("comment", this.state.comment);
+    formData.append("timeout", this.state.timeout);
+    formData.append("latitude", this.state.latitude);
+    formData.append("longitude", this.state.longitude);
+    request = new XMLHttpRequest();
+    request.upload.addEventListener("progress", this.uploadProgress, false);
+    request.addEventListener("load", this.uploadComplete, false);
+    request.addEventListener("error", this.uploadFailed, false);
+    request.addEventListener("abort", this.uploadFailed, false);
+    request.open("POST", "http://localhost:8080/posts");
+    return request.send(formData);
+  },
+  uploadProgress: function(evt) {
+    return this.setState({
+      progress: Math.round(evt.loaded * 100 / evt.total)
+    });
+  },
+  uploadComplete: function(evt) {
+    var post, response;
+    response = JSON.parse(evt.target.responseText);
+    if (!response.status) {
+      post = new Post(response);
+      this.props.posts.add(post);
+      return this.props.onRequestHide();
+    } else {
+      this.setState({
+        error: true
+      });
+      return this.setState({
+        progress: 0
+      });
+    }
+  },
+  uploadFailed: function(evt) {
+    this.setState({
+      error: true
+    });
+    return this.setState({
+      progress: 0
+    });
+  },
+  setFile: function(evt) {
+    return this.setState({
+      file: evt.target.files[0]
+    });
+  },
+  setComment: function(evt) {
+    return this.setState({
+      comment: evt.target.value
+    });
+  },
+  setUsername: function(evt) {
+    return this.setState({
+      username: evt.target.value
+    });
+  },
+  setTimeout: function(evt) {
+    return this.setState({
+      timeout: evt.target.value
+    });
+  },
+  render: function() {
+    var error, progressBar;
+    if (this.state.progress > 0) {
+      progressBar = React.createElement(ProgressBar, {
+        "active": true,
+        "now": this.state.progress
+      });
+    } else {
+      progressBar = '';
+    }
+    if (this.state.error) {
+      error = React.createElement(ErrorAlert, {
+        "title": "Something went wrong!",
+        "text": "Please try again"
+      });
+    } else {
+      error = '';
+    }
+    return React.createElement(Modal, React.__spread({}, this.props, {
+      "bsStyle": 'primary',
+      "title": 'Add Post'
+    }), React.createElement("div", {
+      "className": "modal-body"
+    }, React.createElement("form", {
+      "className": 'form-horizontal',
+      "onSubmit": this.addPost
+    }, React.createElement(Input, {
+      "type": 'file',
+      "onChange": this.setFile,
+      "label": 'Image',
+      "labelClassName": 'col-xs-2',
+      "wrapperClassName": 'col-xs-10'
+    }), React.createElement(Input, {
+      "type": 'textarea',
+      "onChange": this.setComment,
+      "label": 'Comment',
+      "labelClassName": 'col-xs-2',
+      "wrapperClassName": 'col-xs-10'
+    }), React.createElement(Input, {
+      "type": 'text',
+      "onChange": this.setUsername,
+      "label": 'Username',
+      "labelClassName": 'col-xs-2',
+      "wrapperClassName": 'col-xs-10'
+    }), React.createElement(Input, {
+      "type": 'select',
+      "onChange": this.setTimeout,
+      "label": 'Expires in',
+      "labelClassName": 'col-xs-2',
+      "wrapperClassName": 'col-xs-10'
+    }, React.createElement("option", {
+      "value": '60000'
+    }, "1 Minute"), React.createElement("option", {
+      "value": '300000'
+    }, "5 Minutes"), React.createElement("option", {
+      "value": '600000'
+    }, "10 Minutes"), React.createElement("option", {
+      "value": '900000'
+    }, "15 Minutes"), React.createElement("option", {
+      "value": '1800000'
+    }, "30 Minutes"), React.createElement("option", {
+      "value": '3600000'
+    }, "1 Hour"), React.createElement("option", {
+      "value": '7200000'
+    }, "2 Hour"), React.createElement("option", {
+      "value": '21600000'
+    }, "6 Hour"), React.createElement("option", {
+      "value": '43200000'
+    }, "12 Hour"), React.createElement("option", {
+      "value": '86400000'
+    }, "1 Day")), React.createElement(Input, {
+      "type": "submit",
+      "className": "pull-right",
+      "bsStyle": "success",
+      "value": "Add Post",
+      "wrapperClassName": 'col-xs-12'
+    })), progressBar, error));
+  }
+});
+
+module.exports = AddPostModal;
+
+
+
+},{"../../models/post":227,"./errorAlert.cjsx":232,"react":222,"react-bootstrap":56}],231:[function(require,module,exports){
 var AwesomeIcon, React, _;
 
 React = require('react');
@@ -41013,7 +41199,35 @@ module.exports = AwesomeIcon;
 
 
 
-},{"react":222,"underscore":2}],231:[function(require,module,exports){
+},{"react":222,"underscore":2}],232:[function(require,module,exports){
+var Alert, ErrorAlert, React;
+
+React = require('react');
+
+Alert = require('react-bootstrap').Alert;
+
+ErrorAlert = React.createClass({
+  displayName: 'ErrorAlert',
+  propTypes: {
+    title: React.PropTypes.string.isRequired,
+    text: React.PropTypes.string.isRequired
+  },
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return this.props.title !== nextProps.title || this.props.text !== nextProps.text;
+  },
+  render: function() {
+    return React.createElement(Alert, {
+      "bsStyle": 'danger',
+      "onDismiss": this.handleAlertDismiss
+    }, React.createElement("h4", null, this.props.title), React.createElement("p", null, this.props.text));
+  }
+});
+
+module.exports = ErrorAlert;
+
+
+
+},{"react":222,"react-bootstrap":56}],233:[function(require,module,exports){
 var Paragraph, React, _;
 
 React = require('react');
@@ -41051,7 +41265,7 @@ module.exports = Paragraph;
 
 
 
-},{"react":222,"underscore":2}],232:[function(require,module,exports){
+},{"react":222,"underscore":2}],234:[function(require,module,exports){
 var AwesomeIcon, Col, Paragraph, Post, React, ResponsiveImage, Row, VoteButtons, moment;
 
 React = require('react');
@@ -41112,7 +41326,7 @@ module.exports = Post;
 
 
 
-},{"./awesomeIcon.cjsx":230,"./paragraph.cjsx":231,"./responsiveImage.cjsx":233,"./voteButtons.cjsx":234,"moment":5,"react":222,"react-bootstrap":56}],233:[function(require,module,exports){
+},{"./awesomeIcon.cjsx":231,"./paragraph.cjsx":233,"./responsiveImage.cjsx":235,"./voteButtons.cjsx":236,"moment":5,"react":222,"react-bootstrap":56}],235:[function(require,module,exports){
 var React, ResponsiveImage;
 
 React = require('react');
@@ -41142,7 +41356,7 @@ module.exports = ResponsiveImage;
 
 
 
-},{"react":222}],234:[function(require,module,exports){
+},{"react":222}],236:[function(require,module,exports){
 var AwesomeIcon, Button, ButtonGroup, React, VoteButtons;
 
 React = require('react');
@@ -41201,8 +41415,8 @@ module.exports = VoteButtons;
 
 
 
-},{"./awesomeIcon.cjsx":230,"react":222,"react-bootstrap":56}],235:[function(require,module,exports){
-var Backbone, Post, React, ResultsView,
+},{"./awesomeIcon.cjsx":231,"react":222,"react-bootstrap":56}],237:[function(require,module,exports){
+var AddPostModal, Backbone, Button, ModalTrigger, Post, React, ResultsView,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -41213,6 +41427,12 @@ Backbone.$ = require('jquery');
 React = require('react');
 
 Post = require('./components/post.cjsx');
+
+AddPostModal = require('./components/addPostModal.cjsx');
+
+ModalTrigger = require('react-bootstrap').ModalTrigger;
+
+Button = require('react-bootstrap').Button;
 
 ResultsView = (function(_super) {
   __extends(ResultsView, _super);
@@ -41259,9 +41479,17 @@ ResultsView = (function(_super) {
         "key": model.id
       });
     });
-    return React.render(React.createElement("div", {
+    React.render(React.createElement("div", {
       "className": "posts"
     }, posts), this.$('.posts-container').get(0));
+    return React.render(React.createElement(ModalTrigger, {
+      "modal": React.createElement(AddPostModal, {
+        "posts": this.posts
+      })
+    }, React.createElement(Button, {
+      "className": "add-btn",
+      "bsSize": 'large'
+    }, "Add Post")), this.$('.add-post-btn-container').get(0));
   };
 
   ResultsView.prototype.remove = function() {
@@ -41277,4 +41505,4 @@ ResultsView = (function(_super) {
 module.exports = ResultsView;
 
 
-},{"../templates/results.jade":229,"./components/post.cjsx":232,"backbone":1,"jquery":4,"react":222}]},{},[225])
+},{"../templates/results.jade":229,"./components/addPostModal.cjsx":230,"./components/post.cjsx":234,"backbone":1,"jquery":4,"react":222,"react-bootstrap":56}]},{},[225])

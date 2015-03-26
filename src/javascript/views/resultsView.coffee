@@ -3,6 +3,9 @@ Backbone.$ = require 'jquery'
 React      = require 'react'
 
 Post = require './components/post.cjsx'
+AddPostModal = require './components/addPostModal.cjsx'
+ModalTrigger = require('react-bootstrap').ModalTrigger
+Button = require('react-bootstrap').Button
 
 class ResultsView extends Backbone.View
 
@@ -38,6 +41,14 @@ class ResultsView extends Backbone.View
       </div>
       ,
       @$('.posts-container').get(0)
+    )
+
+    React.render(
+      <ModalTrigger modal={<AddPostModal posts={@posts} />}>
+        <Button className="add-btn" bsSize='large'>Add Post</Button>
+      </ModalTrigger>
+      ,
+      @$('.add-post-btn-container').get(0)
     )
 
   remove: ->

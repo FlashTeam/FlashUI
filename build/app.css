@@ -39,4 +39,29 @@ h1 {
   margin-top: -12px;
   margin-left: 15px; }
 
+.add-btn {
+  background: none;
+  border: 1px solid white;
+  text-shadow: none;
+  color: white;
+  transition: all 250ms ease-in; }
+
+.add-btn:hover, .add-btn:focus, .add-btn:active {
+  background: white;
+  color: #428bca;
+  border-color: #428bca; }
+
+.bg-primary {
+  background-color: #428bca; }
+
+.close {
+  color: white;
+  opacity: 0.2;
+  transition: all 250ms ease-in; }
+
+.close:focus, .close:hover {
+  color: white;
+  filter: alpha(opacity=80);
+  opacity: 0.8; }
+
 /*# sourceMappingURL=app.css.map */
