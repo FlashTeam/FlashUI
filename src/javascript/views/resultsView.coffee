@@ -1,8 +1,7 @@
+_          = require 'underscore'
 Backbone   = require 'backbone'
 Backbone.$ = require 'jquery'
-React      = require 'react'
-
-Post = require './components/post.cjsx'
+PostView = require './postView'
 
 class ResultsView extends Backbone.View
 
@@ -14,8 +13,12 @@ class ResultsView extends Backbone.View
     @children = []
     @render()
 
-    @listenTo @posts, 'add change', (post) ->
-      @postRender()
+    @listenTo @posts, 'add', (post) ->
+      Post = new PostView
+        model: post
+
+      $('.posts').prepend(Post.render())
+      Post.postRender()
 
     @interval = setInterval =>
       @posts.fetch({remove: false})
@@ -29,20 +32,18 @@ class ResultsView extends Backbone.View
     @postRender()
 
   postRender: ->
-    posts = @posts.map (model) ->
-      <Post model={model} key={model.id} />
+    for post in @posts.models
+      Post = new PostView
+        model: post
 
-    React.render(
-      <div className="posts">
-        {posts}
-      </div>
-      ,
-      @$('.posts-container').get(0)
-    )
+      $('.posts').append(Post.render())
+      Post.postRender()
+      @children.push(Post)
 
   remove: ->
     super
-    React.unmountComponentAtNode(@$('.posts-container').get(0))
+    for child in @children
+      child.remove()
     clearInterval(@interval)
 
 module.exports = ResultsView

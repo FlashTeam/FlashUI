@@ -1,0 +1,21 @@
+.row.post(data-id= post.id)
+  .col-md-8.col-md-offset-2
+    .post-img
+      img.img-responsive(src="https://flashimg.s3.amazonaws.com/"+post.image)
+    .post-body
+      .header
+        strong.username= post.username
+        .btn-group.vote-group
+          button.btn.btn-danger.down
+            i.vote.fa.fa-thumbs-o-down
+          button.btn.btn-primary
+            | #{post.vote}
+          button.btn.btn-success.up
+            i.vote.fa.fa-thumbs-o-up
+
+        small.pull-right.text-muted
+          i.fa.fa-clock-o
+          |  #{postDate}
+
+      p= post.comment
+      p Expires #{expires}
