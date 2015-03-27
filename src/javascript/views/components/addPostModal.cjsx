@@ -95,9 +95,9 @@ AddPostModal = React.createClass
             <option value='900000'>15 Minutes</option>
             <option value='1800000'>30 Minutes</option>
             <option value='3600000'>1 Hour</option>
-            <option value='7200000'>2 Hour</option>
-            <option value='21600000'>6 Hour</option>
-            <option value='43200000'>12 Hour</option>
+            <option value='7200000'>2 Hours</option>
+            <option value='21600000'>6 Hours</option>
+            <option value='43200000'>12 Hours</option>
             <option value='86400000'>1 Day</option>
           </Input>
           <Input type="submit" className="pull-right" bsStyle="success" value="Add Post" wrapperClassName='col-xs-12' />

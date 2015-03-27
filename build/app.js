@@ -41012,6 +41012,9 @@ AddPostModal = React.createClass({
   },
   addPost: function(evt) {
     var formData, request;
+    this.setState({
+      error: false
+    });
     evt.preventDefault();
     formData = new FormData();
     formData.append("username", this.state.username);
@@ -41141,11 +41144,11 @@ AddPostModal = React.createClass({
       "value": '3600000'
     }, "1 Hour"), React.createElement("option", {
       "value": '7200000'
-    }, "2 Hour"), React.createElement("option", {
+    }, "2 Hours"), React.createElement("option", {
       "value": '21600000'
-    }, "6 Hour"), React.createElement("option", {
+    }, "6 Hours"), React.createElement("option", {
       "value": '43200000'
-    }, "12 Hour"), React.createElement("option", {
+    }, "12 Hours"), React.createElement("option", {
       "value": '86400000'
     }, "1 Day")), React.createElement(Input, {
       "type": "submit",
