@@ -40999,6 +40999,13 @@ ErrorAlert = require('./errorAlert.cjsx');
 AddPostModal = React.createClass({
   displayName: 'AddPostModal',
   getInitialState: function() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(this.setPosition, this.errorGetPosition, {
+        maximumAge: 600000,
+        timeout: 5000,
+        enableHighAccuracy: true
+      });
+    }
     return {
       file: '',
       comment: '',
@@ -41058,6 +41065,22 @@ AddPostModal = React.createClass({
     });
     return this.setState({
       progress: 0
+    });
+  },
+  errorGetPosition: function() {
+    this.setState({
+      latitude: '0'
+    });
+    return this.setState({
+      longitude: '0'
+    });
+  },
+  setPosition: function(position) {
+    this.setState({
+      latitude: position.coords.latitude
+    });
+    return this.setState({
+      longitude: position.coords.longitude
     });
   },
   setFile: function(evt) {

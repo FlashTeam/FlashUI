@@ -12,6 +12,9 @@ AddPostModal = React.createClass
   displayName: 'AddPostModal'
 
   getInitialState: ->
+    if (navigator.geolocation)
+      navigator.geolocation.getCurrentPosition(@setPosition, @errorGetPosition, {maximumAge:600000, timeout:5000, enableHighAccuracy: true})
+
     file: ''
     comment: ''
     username: ''
@@ -57,6 +60,14 @@ AddPostModal = React.createClass
   uploadFailed: (evt) ->
     @setState(error: true)
     @setState(progress: 0)
+
+  errorGetPosition: () ->
+    @setState(latitude: '0')
+    @setState(longitude: '0')
+
+  setPosition: (position) ->
+    @setState(latitude: position.coords.latitude)
+    @setState(longitude: position.coords.longitude)
 
   setFile: (evt) ->
     @setState(file: evt.target.files[0])
